@@ -321,16 +321,6 @@ def save_host_info(host):
       data["online"][str(bui.app.plus.get_v1_account_display_string())] = {"name": "None", "ip": "None", "port": "None"}
       post_data_to_firebase(data)
 
-#def clear_online_players():
-#    global data
-#    threading.Thread(target=get_data_from_firebase).start()
-#    data = data if data else {"all_players": {}, "online": {}}
-#    data["online"] = {"YelllowDev": {"name": "None", "ip": "None", "port": "None"}}
-#    post_data_to_firebase(data)
-
-#def start_clear():
-#    threading.Thread(target=lambda: clear_online_players()).start()
-
 def start_save():
     host = bs.get_connection_to_host_info_2()
     threading.Thread(target=lambda: save_host_info(host)).start()
