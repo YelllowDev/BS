@@ -142,7 +142,7 @@ class PlayerListPopup(bui.Window):
         threading.Thread(target=get_data_from_firebase).start()
         if data:
           for user in data["online"]:
-             #if str(user) != str(bui.app.plus.get_v1_account_display_string()) and data["online"][user]["ip"] != "None":
+             if str(user) != str(bui.app.plus.get_v1_account_display_string()) and data["online"][user]["ip"] != "None":
                bui.textwidget(
                            parent=self._columnwidget,
                            size=(610, 30),
