@@ -11,6 +11,7 @@ import threading
 import urllib.parse
 import urllib.request
 import json
+import time
 from bauiv1lib.gather.publictab import PublicGatherTab, PartyEntry, PingThread
 if TYPE_CHECKING:
     from typing import Callable
@@ -115,31 +116,33 @@ class PlayerListPopup(bui.Window):
             scale=1.6,
             color=(0.6, 1.0, 0.6),
             maxwidth=c_width * 0.8,
-            position=(c_width * 0.5, c_height - 30),
+            position=(c_width * 0.5, 330),
         )
 
         self._scrollwidget = bui.scrollwidget(parent=self._root_widget,
                                               size=(c_width-50, c_height-160),
-                                              position=(30,90))
+                                              position=(30,60))
         self._columnwidget = bui.columnwidget(parent=self._scrollwidget,
                                               border=1,
                                               margin=0)
 
-        self.cancel_button = btn = bui.buttonwidget(
-            parent=self._root_widget,
-            label=babase.Lstr(resource='cancelText'),
-            size=(c_width-40, 60),
-            color=(1.0, 0.2, 0.2),
-            position=(25, 30),
-            on_activate_call=self._transition_out,
-            autoselect=True,
-        )    
+        self._cancel_button = btn = bui.buttonwidget(
+                parent=self._root_widget,
+                autoselect=True,
+                position=(40, 320),
+                size=(130, 60),
+                scale=0.8,
+                text_scale=1.2,
+                label=bui.Lstr(resource='backText'),
+                button_type='back',
+                on_activate_call=self._transition_out,
+           )
 
    
         threading.Thread(target=get_data_from_firebase).start()
         if data:
           for user in data["online"]:
-             if str(user) != str(bui.app.plus.get_v1_account_display_string()) and data["online"][user]["ip"] != "None":
+             #if str(user) != str(bui.app.plus.get_v1_account_display_string()) and data["online"][user]["ip"] != "None":
                bui.textwidget(
                            parent=self._columnwidget,
                            size=(610, 30),
@@ -215,6 +218,7 @@ class PlayerInfoPopup(bui.Window):
         self.online_name = None
         self.online_ip = None
         self.online_port = None
+        self.online_lastseen = None
         self.title = user+" OFFLINE"
 
         threading.Thread(target=get_data_from_firebase).start()
@@ -224,7 +228,14 @@ class PlayerInfoPopup(bui.Window):
             self.online_name = player["name"]
             self.online_ip = player["ip"]
             self.online_port = player["port"]
+            self.online_lastseen = player["lastseen"]
             self.title = str(user)+" ONLINE"
+
+        if str(self.online_lastseen) != "None":
+          from datetime import datetime
+          formatted_date = datetime.utcfromtimestamp(int(float(self.online_lastseen))).strftime('%m/%d/%y %I:%M%p UTC')
+        else:
+          formatted_date = "None"
 
         bui.textwidget(
             parent=self._root_widget,
@@ -257,7 +268,7 @@ class PlayerInfoPopup(bui.Window):
             maxwidth=c_width * 0.3,
             position=(c_width * 0.6, v - 20),
         )
-        v -= 60
+        v -= 40
         bui.textwidget(
             parent=self._root_widget,
             size=(0, 0),
@@ -276,7 +287,7 @@ class PlayerInfoPopup(bui.Window):
             maxwidth=c_width * 0.3,
             position=(c_width * 0.6, v - 20),
         )
-        v -= 60
+        v -= 40
         bui.textwidget(
             parent=self._root_widget,
             size=(0, 0),
@@ -295,8 +306,25 @@ class PlayerInfoPopup(bui.Window):
             maxwidth=c_width * 0.3,
             position=(c_width * 0.6, v - 20),
         )
-        v -= 60
-
+        v -= 40
+        bui.textwidget(
+            parent=self._root_widget,
+            size=(0, 0),
+            h_align='right',
+            v_align='center',
+            text='LAST SEEN : ',
+            maxwidth=c_width * 0.3,
+            position=(c_width * 0.4, v),
+        )
+        self._part_of_name_edit = bui.textwidget(
+            parent=self._root_widget,
+            size=(c_width * 0.3, 40),
+            h_align='left',
+            v_align='center',
+            text=str(formatted_date),
+            maxwidth=c_width * 0.3,
+            position=(c_width * 0.6, v - 20),
+        )
 
     def _save(self) -> None:
         if self.online_ip and self.online_port:
@@ -314,14 +342,13 @@ def save_host_info(host):
     data = data if data else {"all_players": {}, "online": {}}
     if host:
       data["all_players"][str(bui.app.plus.get_v1_account_display_string())] = {"name": str(host.name), "ip": str(host.address), "port": str(host.port)}
-      data["online"][str(bui.app.plus.get_v1_account_display_string())] = {"name": str(host.name), "ip": str(host.address), "port": str(host.port)}
+      data["online"][str(bui.app.plus.get_v1_account_display_string())] = {"name": str(host.name), "ip": str(host.address), "port": str(host.port), "lastseen": str(time.time())}
       post_data_to_firebase(data)
     else:
       data["all_players"][str(bui.app.plus.get_v1_account_display_string())] = {"name": "None", "ip": "None", "port": "None"}
-      data["online"][str(bui.app.plus.get_v1_account_display_string())] = {"name": "None", "ip": "None", "port": "None"}
+      data["online"][str(bui.app.plus.get_v1_account_display_string())] = {"name": "None", "ip": "None", "port": "None", "lastseen": str(time.time())}
       post_data_to_firebase(data)
 
 def start_save():
     host = bs.get_connection_to_host_info_2()
     threading.Thread(target=lambda: save_host_info(host)).start()
-      
