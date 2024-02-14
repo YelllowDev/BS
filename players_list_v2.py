@@ -1,11 +1,3 @@
-import json, threading, time, urllib, datetime
-import babase
-import bauiv1 as bui
-import bauiv1lib.party
-import bascenev1 as bs 
-from bauiv1lib.tabs import TabRow
-
-
 data = None
 # SAVE DATABASE
 def post_data_to_firebase(data):
@@ -109,13 +101,15 @@ class PlayersListPopup(bui.Window):
             on_select_call=bui.WeakCall(self._change_tab),
         )
         # SET DEFAULT TAB
-        self._tab = "all_players"
-        self._tab_row.update_appearance(self._tab)
-        self._change_tab(self._tab)
+        self._tab = "following"
+        self._tab_row.update_appearance("all_players")
+        self._change_tab("all_players")
 
     # CHANGE TAB
     def _change_tab(self, tab_id):
- 
+      if self._tab == tab_id:
+        return
+
       self._tab_row.update_appearance(tab_id)
       for child in self._columnwidget.get_children():
         child.delete()
@@ -157,6 +151,7 @@ class PlayersListPopup(bui.Window):
         
       elif tab_id == "following":
         self._tab = "following"
+        self.open_window_len -= 1
         # GET DATA & PLACING PLAYERS ON THE LIST
         threading.Thread(target=get_data_from_firebase).start()
         if data:
@@ -196,7 +191,7 @@ class PlayersListPopup(bui.Window):
       self.open_window_len += 1
       if self.open_window_len >= 2:
         PlayerInfoPopup(self.player_select, user)
-    
+
     # CLOSE WINDOW
     def _transition_out(self) -> None:
         bui.containerwidget(edit=self._root_widget, transition='out_scale')
@@ -257,7 +252,7 @@ class PlayerInfoPopup(bui.Window):
           self.user_info = data[user]
 
         self.lastseen = datetime.datetime.utcfromtimestamp(int(self.user_info["lastseen"])).strftime('%m/%d/%y %I:%M%p UTC')
-        if int(time.time()) - int(self.user_info["lastseen"]) <= 3:
+        if int(time.time()) - int(self.user_info["lastseen"]) <= 5:
             self.lastseen = "Now"
 
         if self.user_info["activity"] != "None":
@@ -433,7 +428,7 @@ class PlayerInfoPopup(bui.Window):
 def save_host_info(host):
     global data
     threading.Thread(target=get_data_from_firebase).start()
-    data = data if data else {}
+    data = data
     user = str(bui.app.plus.get_v1_account_display_string())
     if user not in data:
       data[user] = {"activity": "None", "lastseen": "None", "following": ["YelllowDev"]}
@@ -450,21 +445,3 @@ def start_save():
     host = bs.get_connection_to_host_info_2()
     threading.Thread(target=lambda: save_host_info(host)).start()
 
-
-# ba_meta require api 8
-# ba_meta export plugin
-class YelllowDev(babase.Plugin):
-    timer = bs.AppTimer(1, start_save, repeat=True)
-    def __init__(self):
-        bauiv1lib.party.PartyWindow = NewPW
-        
-    def on_app_suspend(self) -> None:
-      global data
-      threading.Thread(target=get_data_from_firebase).start()
-      data = data if data else {}
-      user = str(bui.app.plus.get_v1_account_display_string())
-      if user not in data:
-        data[user] = {"activity": "None", "lastseen": "None", "following": ["YelllowDev"]}
-      data[user]["lastseen"] = int(time.time())
-      data[user]["activity"] = "None"
-      post_data_to_firebase(data)
