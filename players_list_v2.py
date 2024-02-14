@@ -126,7 +126,6 @@ class PlayersListPopup(bui.Window):
         # GET DATA & PLACING PLAYERS ON THE LIST
         threading.Thread(target=get_data_from_firebase).start()
         if data:
-          print(data)
           found = False
           for player in data:
             if player != str(bui.app.plus.get_v1_account_display_string()):
