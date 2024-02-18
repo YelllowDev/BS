@@ -138,7 +138,7 @@ class OnlineChatPopup(bui.Window):
             description='Enter message ...',
             position=(35, 40),
             autoselect=True,
-            max_chars=30,
+            max_chars=100,
         )
         # SEND BUTTON
         self._send_button = btn = bui.buttonwidget(
@@ -162,8 +162,10 @@ class OnlineChatPopup(bui.Window):
           messages = []
         message = bui.textwidget(query=self._message_box)
         if message.strip() != "":
+          splits = [message[i:i+30] for i in range(0, len(message), 30)]
+          for split in splits:
             author = str(bui.app.plus.get_v1_account_display_string())
-            message = str(message)
+            message = str(split)
             msg_time = str(int(time.time()))
 
             messages.append({"msg": message, "author": author, "time": msg_time})
