@@ -201,7 +201,7 @@ class OnlineChatPopup(bui.Window):
     # MSG INFO
     def _msg_info(self, msg):
         self._root_widget2 = bui.containerwidget(size=(350, 100),
-                                                on_outside_click_call=self._transition_out,
+                                                on_outside_click_call=self._transition_out2,
                                                 transition="in_scale",
                                                 scale=(2.1 if self.uiscale is babase.UIScale.SMALL else 1.5
                                                        if self.uiscale is babase.UIScale.MEDIUM else 1.0))
@@ -215,8 +215,10 @@ class OnlineChatPopup(bui.Window):
                            h_align='center',
                            v_align='center',)
 
-    # CLOSE WINDOW
+    # CLOSE WINDOW 1
     def _transition_out(self) -> None:
         bui.containerwidget(edit=self._root_widget, transition='out_scale')
-
+    # CLOSE WINDOW 2
+    def _transition_out2(self) -> None:
+        bui.containerwidget(edit=self._root_widget2, transition='out_scale')
 
