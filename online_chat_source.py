@@ -200,7 +200,7 @@ class OnlineChatPopup(bui.Window):
 
     # MSG INFO
     def _msg_info(self, msg):
-        self._root_widget = bui.containerwidget(size=(350, 100),
+        self._root_widget2 = bui.containerwidget(size=(350, 100),
                                                 on_outside_click_call=self._transition_out,
                                                 transition="in_scale",
                                                 scale=(2.1 if self.uiscale is babase.UIScale.SMALL else 1.5
@@ -208,7 +208,7 @@ class OnlineChatPopup(bui.Window):
         msg_time = datetime.datetime.utcfromtimestamp(int(msg['time'])).strftime('%m/%d/%y %I:%M:%S %p - UTC')
         msg_time_ago = format_time_difference(int(msg['time']))
         bui.textwidget(
-                           parent=self._root_widget,
+                           parent=self._root_widget2,
                            size=(350, 75),
                            color=(1,1,1),
                            text=msg_time+"\n"+msg_time_ago,
