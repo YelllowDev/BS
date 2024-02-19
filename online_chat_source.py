@@ -24,7 +24,7 @@ def get_discord_messages():
         if messages is None:
           messages = []
 
-
+# FORMAT TIME
 def format_time_difference(timestamp):
     time_difference = datetime.datetime.now() - datetime.datetime.fromtimestamp(timestamp)
     days = time_difference.days
@@ -42,6 +42,23 @@ def format_time_difference(timestamp):
         return f"{seconds} seconds ago"
     else:
         return "Just now"
+
+
+# SPLIT MESSAGE
+def split_msg(message):
+  chunks = []
+  chunk = ""
+  for word in message.split():
+      if len(chunk) + len(word) + 1 <= 50:
+          chunk += word + " "
+      else:
+          chunks.append(chunk.strip())
+          chunk = word + " "
+  if chunk:
+      chunks.append(chunk.strip())
+
+  return chunks
+
 
 
 class NewPW(bauiv1lib.party.PartyWindow):
@@ -138,7 +155,7 @@ class OnlineChatPopup(bui.Window):
             description='Enter message ...',
             position=(35, 40),
             autoselect=True,
-            max_chars=100,
+            max_chars=130,
         )
         # SEND BUTTON
         self._send_button = btn = bui.buttonwidget(
@@ -162,7 +179,7 @@ class OnlineChatPopup(bui.Window):
           messages = []
         message = bui.textwidget(query=self._message_box)
         if message.strip() != "":
-          splits = [message[i:i+30] for i in range(0, len(message), 30)]
+          splits = split_msg(message)
           for split in splits:
             author = str(bui.app.plus.get_v1_account_display_string())
             message = str(split)
