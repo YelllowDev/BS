@@ -160,7 +160,7 @@ class OnlineChatPopup(bui.Window):
         # SEND BUTTON
         self._send_button = btn = bui.buttonwidget(
                 parent=self._root_widget,
-                #autoselect=True,
+                autoselect=True,
                 position=(538, 42),
                 size=(80, 45),
                 scale=0.8,
@@ -169,6 +169,7 @@ class OnlineChatPopup(bui.Window):
                 button_type='square',
                 on_activate_call=self._send_message,
            )
+        bui.textwidget(edit=self._message_box,on_return_press_call=self._send_button.activate)
         self._update_timer = bs.AppTimer(0.5, self._refresh, repeat=True)
 
     # SEND MESSAGE
