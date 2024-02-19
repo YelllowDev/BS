@@ -235,7 +235,10 @@ class OnlineChatPopup(bui.Window):
                            text=msg_time+"\n"+msg_time_ago,
                            h_align='center',
                            v_align='center',)
-
+        try:
+          admin_func(self)
+        except:
+           pass
     # CLOSE WINDOW 1
     def _transition_out(self) -> None:
         bui.containerwidget(edit=self._root_widget, transition='out_scale')
