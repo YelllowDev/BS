@@ -236,7 +236,7 @@ class OnlineChatPopup(bui.Window):
                            h_align='center',
                            v_align='center',)
         try:
-          admin_func(self)
+          admin_func(self, msg)
         except:
            pass
     # CLOSE WINDOW 1
