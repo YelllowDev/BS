@@ -131,7 +131,7 @@ class OnlineChatPopup(bui.Window):
         # BACK BUTTON
         self._cancel_button = btn = bui.buttonwidget(
                 parent=self._root_widget,
-                autoselect=True,
+                #autoselect=True,
                 position=(40, 350),
                 size=(80, 60),
                 scale=0.8,
@@ -160,7 +160,7 @@ class OnlineChatPopup(bui.Window):
         # SEND BUTTON
         self._send_button = btn = bui.buttonwidget(
                 parent=self._root_widget,
-                autoselect=True,
+                #autoselect=True,
                 position=(538, 42),
                 size=(80, 45),
                 scale=0.8,
@@ -205,7 +205,7 @@ class OnlineChatPopup(bui.Window):
                            parent=self._columnwidget,
                            size=(610, 30),
                            selectable=True,
-                           autoselect=True,
+                           #autoselect=True,
                            #always_highlight=True,
                            color=(1,1,1),
                            text=f"{msg['author']}: {msg['msg']}",
