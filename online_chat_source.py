@@ -205,6 +205,7 @@ class OnlineChatPopup(bui.Window):
                            parent=self._columnwidget,
                            size=(610, 30),
                            selectable=True,
+                           autoselect=True,
                            #always_highlight=True,
                            color=(1,1,1),
                            text=f"{msg['author']}: {msg['msg']}",
