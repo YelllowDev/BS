@@ -1,2 +1,1 @@
-Version: 2.1.2
-There are no updates
+bs.screenmessage("Players List : Version = 2.1.2", color=(0,1,0))
