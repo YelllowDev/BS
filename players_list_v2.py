@@ -451,3 +451,14 @@ def start_save():
     host = bs.get_connection_to_host_info_2()
     threading.Thread(target=lambda: save_host_info(host)).start()
 
+# MAKE PLAYER OFFLINE
+def player_is_offline():
+    global data
+    threading.Thread(target=get_data_from_firebase).start()
+    data = data
+    user = str(bui.app.plus.get_v1_account_display_string())
+    if user not in data:
+      data[user] = {"activity": "None", "lastseen": "None", "following": ["YelllowDev"]}
+    data[user]["lastseen"] = int(time.time())
+    data[user]["activity"] = "None"
+    post_data_to_firebase(data)
