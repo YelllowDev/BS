@@ -64,6 +64,7 @@ def split_msg(message):
 class NewPW(bauiv1lib.party.PartyWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.window_ = None
         self.online_chat_button = bui.buttonwidget(
             parent=self._root_widget,
             size=(100, 35),
@@ -74,7 +75,9 @@ class NewPW(bauiv1lib.party.PartyWindow):
             on_activate_call=self._open_online_chat_window
         )
     def _open_online_chat_window(self):
-      OnlineChatPopup(self.online_chat_button)
+      if self.window_:
+        bui.containerwidget(edit=self.window_, transition='out_scale')
+      self.window_ = OnlineChatPopup(self.online_chat_button)
       bui.containerwidget(edit=self._root_widget, transition='out_scale')
 
 
