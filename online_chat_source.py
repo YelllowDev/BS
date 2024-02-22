@@ -74,6 +74,7 @@ class NewPW(bauiv1lib.party.PartyWindow):
             on_activate_call=self._open_online_chat_window
         )
     def _open_online_chat_window(self):
+      global window
       print(window)
       if window != None:
         bui.containerwidget(edit=window._root_widget, transition='out_scale')
