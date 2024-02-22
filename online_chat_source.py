@@ -76,8 +76,7 @@ class NewPW(bauiv1lib.party.PartyWindow):
         )
     def _open_online_chat_window(self):
       self.window_ = OnlineChatPopup(self.online_chat_button)
-      print(self.window_)
-      bui.containerwidget(edit=self._root_widget, transition='out_scale')
+      bui.containerwidget(edit=self.window_._root_widget, transition='out_scale')
 
 
 
