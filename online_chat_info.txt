@@ -1,2 +1,1 @@
-bs.screenmessage("Version 1.3.1")
-bs.screenmessage("No updates")
+bs.screenmessage("ONLINE CHAT : Version 1.3.1", color=(0,1,0))
