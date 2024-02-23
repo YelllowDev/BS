@@ -278,7 +278,7 @@ class PlayerInfoPopup(bui.Window):
         if int(time.time()) - int(self.user_info["lastseen"]) <= 5:
             self.lastseen = "Now"
         else:
-            self.msg_time_ago = format_time_difference(int(msg['time']))
+            self.msg_time_ago = format_time_difference(int(self.user_info["lastseen"]))
 
         if self.user_info["activity"] != "None":
           self.address = self.user_info["activity"]["IP"]
