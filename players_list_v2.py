@@ -23,8 +23,24 @@ def get_data_from_firebase():
         data = json.loads(response)
 
 ### SOME FUNCTIONS THAT HELP ###
-# I realized that I didn't need to add any helper function, lol
-
+# FORMAT TIME
+def format_time_difference(timestamp):
+    time_difference = datetime.datetime.now() - datetime.datetime.fromtimestamp(timestamp)
+    days = time_difference.days
+    hours = time_difference.seconds // 3600
+    minutes = (time_difference.seconds % 3600) // 60
+    seconds = time_difference.seconds % 60
+    
+    if days > 0:
+        return f"{days} days ago"
+    elif hours > 0:
+        return f"{hours} hours ago"
+    elif minutes > 0:
+        return f"{minutes} minutes ago"
+    elif seconds > 0:
+        return f"{seconds} seconds ago"
+    else:
+        return "Just now"
 
 class NewPW(bauiv1lib.party.PartyWindow):
     def __init__(self, *args, **kwargs):
@@ -258,8 +274,11 @@ class PlayerInfoPopup(bui.Window):
           self.user_info = data[user]
 
         self.lastseen = datetime.datetime.utcfromtimestamp(int(self.user_info["lastseen"])).strftime('%m/%d/%y %I:%M%p UTC')
+        self.msg_time_ago = ""
         if int(time.time()) - int(self.user_info["lastseen"]) <= 5:
             self.lastseen = "Now"
+        else:
+            self.msg_time_ago = format_time_difference(int(msg['time']))
 
         if self.user_info["activity"] != "None":
           self.address = self.user_info["activity"]["IP"]
@@ -366,7 +385,7 @@ class PlayerInfoPopup(bui.Window):
             size=(c_width * 0.3, 40),
             h_align='left',
             v_align='center',
-            text=str(self.lastseen),
+            text=f"{self.lastseen}\n{self.msg_time_ago}",
             maxwidth=c_width * 0.3,
             position=(c_width * 0.6, v - 20),
         )
