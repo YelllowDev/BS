@@ -383,9 +383,9 @@ class PlayerInfoPopup(bui.Window):
         self._part_of_name_edit = bui.textwidget(
             parent=self._root_widget,
             size=(c_width * 0.3, 40),
-            #h_align='left',
+            h_align='left',
             v_align='center',
-            text=f"{self.lastseen}\n{self.msg_time_ago}",
+            text=f"\n{self.lastseen}\n{self.msg_time_ago}",
             maxwidth=c_width * 0.3,
             position=(c_width * 0.6, v - 20),
         )
