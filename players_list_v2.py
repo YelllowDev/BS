@@ -278,7 +278,7 @@ class PlayerInfoPopup(bui.Window):
         if int(time.time()) - int(self.user_info["lastseen"]) <= 5:
             self.lastseen = "Now"
         else:
-            self.msg_time_ago = format_time_difference(int(self.user_info["lastseen"]))
+            self.msg_time_ago = "\n"+str(format_time_difference(int(self.user_info["lastseen"])))
 
         if self.user_info["activity"] != "None":
           self.address = self.user_info["activity"]["IP"]
@@ -385,7 +385,7 @@ class PlayerInfoPopup(bui.Window):
             size=(c_width * 0.3, 40),
             h_align='left',
             v_align='center',
-            text=f"\n{self.lastseen}\n{self.msg_time_ago}",
+            text=f"{self.lastseen}{self.msg_time_ago}",
             maxwidth=c_width * 0.3,
             position=(c_width * 0.6, v - 20),
         )
